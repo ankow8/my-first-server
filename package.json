@@ -1,6 +1,9 @@
 {
   "name": "my-first-server",
   "packageManager": "yarn@3.1.1",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
