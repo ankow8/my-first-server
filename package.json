@@ -20,6 +20,7 @@
     "reactstrap": "^8.0.1",
     "redux-thunk": "^2.3.0",
     "sass": "^1.35.1",
+    "socket.io": "^4.4.1",
     "uuid": "^8.3.2"
   }
 }
