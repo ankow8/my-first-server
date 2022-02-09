@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../db');
 //const { v4: uuidv4 } = require('uuid');
 
+//socket.on('seatsUpdated', (seats) => {db.seats});
+
 //GET all
 router.route('/seats').get((req, res) => {
   res.json(db.seats);
@@ -23,6 +25,7 @@ router.route('/seats').post((req, res) => {
   } else if(day && seat && client && email) {
     db.seats.push(person);
     res.json({message: 'OK'});
+    req.io.emit('seatsUpdated', db.seats);
   } else {
     res.status(404).json({message: 'Not found...'});
   };
