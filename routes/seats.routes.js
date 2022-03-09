@@ -1,56 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
-//const { v4: uuidv4 } = require('uuid');
 
-//socket.on('seatsUpdated', (seats) => {db.seats});
+const SeatsControllers = require('../controllers/seats.controllers');
 
 //GET all
-router.route('/seats').get((req, res) => {
-  res.json(db.seats);
-});
+router.get('/seats', SeatsControllers.getAll);
 
 //GET by id
-router.route('/seats/:id').get((req, res) => {
-  res.json(db.seats.find(client => client.id == req.params.id));
-});
+router.get('/seats/:id', SeatsControllers.getById);
 
 //POST new element
-router.route('/seats').post((req, res) => {
-  const { day, seat, client, email } = req.body;
-  const id = db.seats.length + 1;
-  const person = {id: id, day: day, seat: seat, client: client, email: email};
-  if(db.seats.some(item => (item.day == day && item.seat == seat))) {
-    res.status(409).json({ message: 'The slot is already taken...' });
-  } else if(day && seat && client && email) {
-    db.seats.push(person);
-    res.json({message: 'OK'});
-    req.io.emit('seatsUpdated', db.seats);
-  } else {
-    res.status(404).json({message: 'Not found...'});
-  };
-
-});
-
-//DELETE by id
-router.route('/seats/:id').delete((req, res) => {
-  const client = db.seats.find(client => client.id == req.params.id)
-  db.seats.splice(db.seats.indexOf(client), 1);
-  res.json({message: 'OK'});
-});
+router.post('/seats', SeatsControllers.postNew);
 
 //PUT modify element by id
-router.route('/seats/:id').put((req, res) => {
-  const { day, seat, client, email } = req.body;
-  const person = db.seats.find(person => person.id == req.params.id);
-  const id = db.seats.indexOf(person);
-  if(day && seat && client && email) {
-    db.seats[id] = {id: req.params.id, day: day, seat: seat, client: client, email: email};
-    res.json({message: 'OK'});
-  } else {
-    res.status(404).json({message: 'Not found...'});
-  }
+router.put('/seats/:id', SeatsControllers.putById);
 
-});
+//DELETE by id
+router.delete('/seats/:id', SeatsControllers.deleteById);
 
 module.exports = router;
