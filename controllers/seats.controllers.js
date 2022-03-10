@@ -24,8 +24,7 @@ exports.getById = async (req, res) => {
 exports.postNew = async (req, res) => {
   try {
     const { day, seat, client, email } = req.body;
-    const id = db.seats.length + 1;
-    const newSeat = new Seat({id: id, day: day, seat: seat, client: client, email: email});
+    const newSeat = new Seat({day: day, seat: seat, client: client, email: email});
     await newSeat.save();
     res.json({message: 'OK'});
   }  catch(err) {
@@ -44,9 +43,9 @@ exports.postNew = async (req, res) => {
 exports.putById = async (req, res) => {
   try {
     const { day, seat, client, email } = req.body;
-    const seat = await Seat.findById(req.params.id);
-    if(day && seat && client && email) {
-      await Seat.updateOne({id: req.params.id, day: day, seat: seat, client: client, email: email});
+    const modifySeat = await Seat.findById(req.params.id);
+    if(modifySeat) {
+      await Seat.updateOne({_id: req.params.id}, {$set: {day: day, seat: seat, client: client, email: email}});
       res.json({message: 'OK'});
     } else {
       res.status(404).json({message: 'Not found...'});

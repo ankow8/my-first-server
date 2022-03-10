@@ -29,7 +29,7 @@ exports.getRandom = async (req, res) => {
     if(tes) {
       res.json(tes);
     } else {
-      res.status(404).json({message; 'Not found'});
+      res.status(404).json({message: 'Not found'});
     }
   } catch(err) {
     res.status(500).json({message: err});
@@ -39,9 +39,9 @@ exports.getRandom = async (req, res) => {
 exports.postNew = async (req, res) => {
   try {
     const { author, text } = req.body;
-    const newTes = await new Testimonial({author: author, text: text});
+    const newTes = new Testimonial({author: author, text: text});
     if(newTes) {
-      await newTes.insertOne(newTes);
+      await newTes.save();
       res.json({message: 'OK'});
     } else {
       res.status(404).json({message: 'Not found...'});
@@ -54,9 +54,9 @@ exports.postNew = async (req, res) => {
 exports.putById = async (req, res) => {
   try {
     const { author, text } = req.body;
-    const tes = await Test.findById(req.params.id);
+    const tes = await Testimonial.findById(req.params.id);
     if(tes) {
-      await tes.updateOne({_id: req.params.id, author: author, text: text});
+      await Testimonial.updateOne({_id: req.params.id}, {$set: {author: author, text: text}});
       res.json({message: 'OK'});
     } else {
       res.status(404).json({message: 'Not found...'});
